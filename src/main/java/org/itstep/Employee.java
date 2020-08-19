@@ -1,29 +1,42 @@
 package org.itstep;
 
-import java.util.Date;
-
-public class Employee {
+public class Employee implements Comparable<Employee>{
     private String name;
-    private String bDate;
+    private String birthDayDate;
     private String sex;
-    private String telNumber;
+    private String phoneNumber;
     private String position;
-    private String department;
+    private Department department;
     private String masterName;
-    private Date begDate;
+    private int beginDate;
     private int pay;
 
-    public Employee(String name, String bDate, String sex, String telNumber, String position, String department, String masterName, Date begDate, int pay) {
-        this.name = name;
-        this.bDate = bDate;
-        this.sex = sex;
-        this.telNumber = telNumber;
-        this.position = position;
-        this.department = department;
-        this.masterName = masterName;
-        this.begDate = begDate;
+    public Employee(String name, String departmentName, String masterName, int beginTime, int pay) {
+        this(name, departmentName, beginTime, pay);
+        this.department.setMasterName(masterName);
+    }
+
+    public Employee(String name, String departmentName, int beginTime, int pay) {
+        this(name, departmentName);
+        this.beginDate = beginTime;
         this.pay = pay;
     }
+
+    public Employee(String name, String departmentName, String masterName) {
+        this(name, departmentName);
+        this.department.setMasterName(masterName);
+    }
+
+    public Employee(String name, String departmentName) {
+        this(name);
+        this.department = new Department(departmentName);
+    }
+
+    public Employee(String name) {
+        this.name = name;
+    }
+
+
 
     public String getName() {
         return name;
@@ -33,12 +46,12 @@ public class Employee {
         this.name = name;
     }
 
-    public String getbDate() {
-        return bDate;
+    public String getBirthDayDate() {
+        return birthDayDate;
     }
 
-    public void setbDate(String bDate) {
-        this.bDate = bDate;
+    public void setBirthDayDate(String birthDayDate) {
+        this.birthDayDate = birthDayDate;
     }
 
     public String getSex() {
@@ -49,12 +62,12 @@ public class Employee {
         this.sex = sex;
     }
 
-    public String getTelNumber() {
-        return telNumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setTelNumber(String telNumber) {
-        this.telNumber = telNumber;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPosition() {
@@ -65,11 +78,11 @@ public class Employee {
         this.position = position;
     }
 
-    public String getDepartment() {
+    public Department getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 
@@ -81,12 +94,12 @@ public class Employee {
         this.masterName = masterName;
     }
 
-    public Date getBegDate() {
-        return begDate;
+    public int getBeginDate() {
+        return beginDate;
     }
 
-    public void setBegDate(Date begDate) {
-        this.begDate = begDate;
+    public void setBeginDate(int time) {
+        this.beginDate = time;
     }
 
     public int getPay() {
@@ -97,4 +110,8 @@ public class Employee {
         this.pay = pay;
     }
 
+    @Override
+    public int compareTo(Employee o) {
+        return this.name.compareTo(o.name);
+    }
 }

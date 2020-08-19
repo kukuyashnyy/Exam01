@@ -1,81 +1,106 @@
 package org.itstep;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 public class Company {
     private String name;
-    private Collection<Employee> employees;
+    private Map<Department, List<Employee>> listMap;
 
     public Company(String name) {
         this.name = name;
-        this.employees = new ArrayList<>();
+        this.listMap = new TreeMap<>();
     }
 
     public void addEmployee(Employee employee) {
-        employees.add(employee);
+
+        if (!this.listMap.containsKey(employee.getDepartment())) {
+            this.listMap.put(employee.getDepartment(), new ArrayList<Employee>());
+        }
+        this.listMap.get(employee.getDepartment()).add(employee);
     }
 
     public void clrEmployee(Employee employee) {
-        employees.remove(employee);
+        this.listMap.remove(employee);
     }
 
-    public void printByName(String name) {
-        employees.stream()
+    public void printByName(Employee employee) {
+        this.listMap.get(employee.getDepartment()).stream()
                 .filter(p -> p.getName().matches(name))
                 .forEach(p -> System.out.println(p.getName()));
     }
 
     public void printByPosition(String position) {
-        employees.stream()
-                .filter(p -> p.getPosition().matches(position))
-                .forEach(p -> System.out.println(p.getName()));
+        for (Department department : this.listMap.keySet()) {
+            this.listMap.get(department).stream()
+                    .filter(p -> p.getPosition().matches(position))
+                    .forEach(p -> System.out.println(p.getName()));
+        }
     }
 
-    public void printByDepartment(String department) {
-        employees.stream()
-                .filter(p -> p.getDepartment().matches(department))
-                .forEach(p -> System.out.println(p.getName()));
+    public void printByDepartment(String departmentName) {
+        for (Department department : this.listMap.keySet()) {
+            this.listMap.get(department).stream()
+                    .filter(p -> p.getDepartment().equals(new Department(departmentName)))
+                    .forEach(p -> System.out.println(p.getName()));
+        }
     }
 
     public void printByMasterName(String masterName) {
-        employees.stream()
-                .filter(p -> p.getMasterName().matches(masterName))
-                .forEach(p -> System.out.println(p.getName()));
+        for (Department department : this.listMap.keySet()) {
+            this.listMap.get(department).stream()
+                    .filter(p -> p.getMasterName().matches(masterName))
+                    .forEach(p -> System.out.println(p.getName()));
+        }
     }
 
     public void printInfo() {
-
+        this.listMap.keySet().stream()
+                .forEach(System.out::println);
     }
 
-    public Double averagePayInCompany() {
-        return employees.stream()
-                .mapToInt(p -> p.getPay())
-                .average()
-                .getAsDouble();
+    public void printAveragePayInCompany() {
+        int i = 1;
+        double sum = 0;
+
+        for (Department department : this.listMap.keySet()) {
+            sum += this.listMap.get(department).stream()
+                    .mapToInt(Employee::getPay)
+                    .sum();
+            i++;
+        }
+        System.out.printf("Average pay in company : %.2f\n", sum/i);
     }
 
-    public Double averagePayByDepartment(String department) {
-        return employees.stream()
-                .filter(p -> p.getDepartment().matches(department))
-                .mapToInt(p -> p.getPay())
-                .average()
-                .getAsDouble();
+    public void printAveragePayByDepartments() {
+        double sum = 0;
+        for (Department department : this.listMap.keySet()) {
+            sum = this.listMap.get(department).stream()
+                    .mapToInt(Employee::getPay)
+                    .average()
+                    .getAsDouble();
+
+            System.out.println(department);
+            System.out.printf("Average pay in this department : %.2f\n", sum);
+        }
     }
 
-    public void topByPay(int num){
-        employees.stream()
-                .sorted((p1, p2) -> p2.getPay() - p1.getPay())
-                .limit(num)
-                .forEach(p -> System.out.println(p.getName()));
+    public void topTenByPay(){
+        final int num = 10;
+        for (Department department : this.listMap.keySet()) {
+            this.listMap.get(department).stream()
+                    .sorted((p1, p2) -> p2.getPay() - p1.getPay())
+                    .limit(num)
+                    .forEach(p -> System.out.println(p.getName()));
+        }
     }
 
-    //???
-    public void topByBeginWork(Date date, int num){
-        employees.stream()
-                .sorted((p1, p2) -> (int) (p2.getBegDate().getTime() - p1.getBegDate().getTime()))
-                .limit(num)
-                .forEach(p -> System.out.println(p.getName()));
+    public void topTenByBeginWork() {
+        final int num = 10;
+        for (Department department : this.listMap.keySet()) {
+            this.listMap.get(department).stream()
+                    .sorted((p1, p2) -> p2.getBeginDate() - p1.getBeginDate())
+                    .limit(num)
+                    .forEach(p -> System.out.println(p.getName()));
+        }
     }
 }
