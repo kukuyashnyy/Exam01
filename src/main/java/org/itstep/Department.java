@@ -1,8 +1,9 @@
 package org.itstep;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Department implements Comparable<Department>{
+public class Department implements Comparable<Department>, Serializable {
     private String name;
     private String masterName;
 

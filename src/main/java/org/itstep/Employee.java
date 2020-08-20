@@ -1,6 +1,10 @@
 package org.itstep;
 
-public class Employee implements Comparable<Employee>{
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Objects;
+
+public class Employee implements Comparable<Employee>, Serializable {
     private String name;
     private String birthDayDate;
     private String sex;
@@ -8,17 +12,16 @@ public class Employee implements Comparable<Employee>{
     private String position;
     private Department department;
     private String masterName;
-    private int beginDate;
+    private LocalDate beginDate;
     private int pay;
 
-    public Employee(String name, String departmentName, String masterName, int beginTime, int pay) {
-        this(name, departmentName, beginTime, pay);
+    public Employee(String name, String departmentName, String masterName, LocalDate beginTime, int pay) {
+        this(name, departmentName, pay);
         this.department.setMasterName(masterName);
     }
 
-    public Employee(String name, String departmentName, int beginTime, int pay) {
+    public Employee(String name, String departmentName, int pay) {
         this(name, departmentName);
-        this.beginDate = beginTime;
         this.pay = pay;
     }
 
@@ -94,11 +97,11 @@ public class Employee implements Comparable<Employee>{
         this.masterName = masterName;
     }
 
-    public int getBeginDate() {
+    public LocalDate getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(int time) {
+    public void setBeginDate(LocalDate time) {
         this.beginDate = time;
     }
 
@@ -113,5 +116,33 @@ public class Employee implements Comparable<Employee>{
     @Override
     public int compareTo(Employee o) {
         return this.name.compareTo(o.name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(name, employee.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", birthDayDate='" + birthDayDate + '\'' +
+                ", sex='" + sex + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", position='" + position + '\'' +
+                ", department=" + department +
+                ", masterName='" + masterName + '\'' +
+                ", beginDate=" + beginDate +
+                ", pay=" + pay +
+                '}';
     }
 }
